@@ -27,7 +27,7 @@ namespace Ecom.API.Middleware
                 {
                     context.Response.StatusCode = (int)HttpStatusCode.TooManyRequests;
                     context.Response.ContentType = "application/json";
-                    var response = new ApiExceptions(context.Response.StatusCode, "Too many requests. Please try again later.");
+                    var response = new ResponseAPI(context.Response.StatusCode, "Too many requests. Please try again later.");
                     var jsonResponse = JsonSerializer.Serialize(response);
                     await context.Response.WriteAsync(jsonResponse);
                     return;
@@ -47,8 +47,8 @@ namespace Ecom.API.Middleware
                 context.Response.StatusCode = statusCode;
                 context.Response.ContentType = "application/json";
                 var response = _env.IsDevelopment() ?
-                    new ApiExceptions((int)context.Response.StatusCode, ex.Message, ex.StackTrace) :
-                    new ApiExceptions((int)context.Response.StatusCode, ex.Message);
+                    new ResponseAPI((int)context.Response.StatusCode, ex.Message, ex.StackTrace) :
+                    new ResponseAPI((int)context.Response.StatusCode, ex.Message);
                 var jsonResponse = JsonSerializer.Serialize(response);
                 await context.Response.WriteAsync(jsonResponse);
             }
@@ -68,7 +68,7 @@ namespace Ecom.API.Middleware
 
             if (dateTimeNow - timesTamp < TimeSpan.FromSeconds(30))
             {
-                if (count >= 5)
+                if (count >= 10)
                 {
                     return false;
                 }
@@ -83,11 +83,19 @@ namespace Ecom.API.Middleware
         }
         public void ApplySecurityHeaders(HttpContext context)
         {
-            context.Response.Headers.Add("X-Content-Type-Options", "nosniff");
-            context.Response.Headers.Add("X-XSS-Protection", "1; mode=block");
-            context.Response.Headers.Add("X-Frame-Options", "DENY");
-            context.Response.Headers.Add("Referrer-Policy", "no-referrer");
-            context.Response.Headers.Add("Content-Security-Policy", "default-src 'self'; script-src 'self'; style-src 'self'; img-src 'self'; font-src 'self'; connect-src 'self'");
+            context.Response.Headers["X-Content-Type-Options"] = "nosniff";
+            context.Response.Headers["X-Frame-Options"] = "DENY";
+            context.Response.Headers["Referrer-Policy"] = "strict-origin-when-cross-origin";
+
+            // CSP حديث وقوي
+            context.Response.Headers["Content-Security-Policy"] =
+                "default-src 'self'; " +
+                "script-src 'self'; " +
+                "style-src 'self' 'unsafe-inline'; " +
+                "img-src 'self' data:; " +
+                "font-src 'self' data:; " +
+                "connect-src 'self'; " +
+                "frame-ancestors 'none';";
         }
     }
 }

@@ -14,6 +14,9 @@ internal class Program
         builder.Services.AddSwaggerGen();
         builder.Services.AddMemoryCache();
 
+        builder.Services.AddCors(op=>op.AddPolicy("CORSPolicy",
+            b=>b.AllowAnyHeader().AllowAnyMethod().AllowCredentials().WithOrigins("https://localhost:4200")));
+
 
         // Add services
         builder.Services.AddControllers();
@@ -21,7 +24,6 @@ internal class Program
         builder.Services.AddInfrastructureServices(builder.Configuration);
         builder.Services.AddAutoMapper(cfg =>
         {
-            // هنا ممكن تضيف Config إضافي لو حبيت
         }, AppDomain.CurrentDomain.GetAssemblies());
         var app = builder.Build();
 
@@ -41,6 +43,7 @@ internal class Program
                 // لو أي مشكلة، ممكن تتجاهلها
             }
         }
+        app.UseCors("CORSPolicy");
         app.UseMiddleware<ExceptionsMiddleware>();
         app.UseStatusCodePagesWithReExecute("/errors/{0}");
 

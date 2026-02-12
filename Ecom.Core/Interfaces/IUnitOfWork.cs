@@ -4,6 +4,6 @@
     {
         IProductRepository Products { get; }
         ICategoryRepository Categories { get; }
-        IPhotoRepository Photos { get; }
+        IImageRepository Images { get; }
     }
 }

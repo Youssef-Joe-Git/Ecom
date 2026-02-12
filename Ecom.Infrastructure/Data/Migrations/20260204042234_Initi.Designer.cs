@@ -11,8 +11,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Ecom.Infrastructure.Data.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20260202215751_adddata")]
-    partial class adddata
+    [Migration("20260204042234_Initi")]
+    partial class Initi
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -66,7 +66,7 @@ namespace Ecom.Infrastructure.Data.Migrations
                         });
                 });
 
-            modelBuilder.Entity("Ecom.Core.Entities.Product.Photo", b =>
+            modelBuilder.Entity("Ecom.Core.Entities.Product.Image", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -86,27 +86,7 @@ namespace Ecom.Infrastructure.Data.Migrations
 
                     b.HasIndex("ProductId");
 
-                    b.ToTable("Photos");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = 1,
-                            Name = "product1.jpg",
-                            ProductId = 1
-                        },
-                        new
-                        {
-                            Id = 2,
-                            Name = "product2.jpg",
-                            ProductId = 2
-                        },
-                        new
-                        {
-                            Id = 3,
-                            Name = "product3.jpg",
-                            ProductId = 3
-                        });
+                    b.ToTable("Images");
                 });
 
             modelBuilder.Entity("Ecom.Core.Entities.Product.Product", b =>
@@ -129,7 +109,10 @@ namespace Ecom.Infrastructure.Data.Migrations
                         .HasMaxLength(100)
                         .HasColumnType("nvarchar(100)");
 
-                    b.Property<decimal>("Price")
+                    b.Property<decimal>("NewPrice")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<decimal>("OldPrice")
                         .HasColumnType("decimal(18,2)");
 
                     b.HasKey("Id");
@@ -143,43 +126,44 @@ namespace Ecom.Infrastructure.Data.Migrations
                         {
                             Id = 1,
                             CategoryId = 1,
-                            Description = "Latest model smartphone",
-                            Name = "Smartphone",
-                            Price = 699.99m
+                            Description = "Description for Product 1",
+                            Name = "Product 1",
+                            NewPrice = 19.99m,
+                            OldPrice = 29.99m
                         },
                         new
                         {
                             Id = 2,
                             CategoryId = 2,
-                            Description = "Bestselling novel",
-                            Name = "Novel Book",
-                            Price = 19.99m
+                            Description = "Description for Product 2",
+                            Name = "Product 2",
+                            NewPrice = 39.99m,
+                            OldPrice = 49.99m
                         },
                         new
                         {
                             Id = 3,
                             CategoryId = 3,
-                            Description = "Comfortable blue jeans",
-                            Name = "Jeans",
-                            Price = 49.99m
+                            Description = "Description for Product 3",
+                            Name = "Product 3",
+                            NewPrice = 59.99m,
+                            OldPrice = 69.99m
                         });
                 });
 
-            modelBuilder.Entity("Ecom.Core.Entities.Product.Photo", b =>
+            modelBuilder.Entity("Ecom.Core.Entities.Product.Image", b =>
                 {
-                    b.HasOne("Ecom.Core.Entities.Product.Product", "Product")
-                        .WithMany("Photos")
+                    b.HasOne("Ecom.Core.Entities.Product.Product", null)
+                        .WithMany("Images")
                         .HasForeignKey("ProductId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-
-                    b.Navigation("Product");
                 });
 
             modelBuilder.Entity("Ecom.Core.Entities.Product.Product", b =>
                 {
                     b.HasOne("Ecom.Core.Entities.Product.Category", "Category")
-                        .WithMany("Products")
+                        .WithMany()
                         .HasForeignKey("CategoryId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -187,14 +171,9 @@ namespace Ecom.Infrastructure.Data.Migrations
                     b.Navigation("Category");
                 });
 
-            modelBuilder.Entity("Ecom.Core.Entities.Product.Category", b =>
-                {
-                    b.Navigation("Products");
-                });
-
             modelBuilder.Entity("Ecom.Core.Entities.Product.Product", b =>
                 {
-                    b.Navigation("Photos");
+                    b.Navigation("Images");
                 });
 #pragma warning restore 612, 618
         }

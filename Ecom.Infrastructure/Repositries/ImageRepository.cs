@@ -4,9 +4,9 @@ using Ecom.Infrastructure.Data;
 
 namespace Ecom.Infrastructure.Repositries
 {
-    public class PhotoRepository : GenericRpository<Photo>, IPhotoRepository
+    public class ImageRepository : GenericRpository<Image>, IImageRepository
     {
-        public PhotoRepository(AppDbContext context) : base(context)
+        public ImageRepository(AppDbContext context) : base(context)
         {
         }
     }

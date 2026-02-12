@@ -4,15 +4,12 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace Ecom.Infrastructure.Data.Config
 {
-    public class ProductConfiguration : IEntityTypeConfiguration<Product>
+    public class ImageConfiguration : IEntityTypeConfiguration<Image>
     {
-        public void Configure(EntityTypeBuilder<Product> builder)
+        public void Configure(EntityTypeBuilder<Image> builder)
         {
             builder.HasKey(p => p.Id);
             builder.Property(p => p.Name).IsRequired().HasMaxLength(100);
-            builder.Property(p => p.NewPrice).HasColumnType("decimal(18,2)");
-            builder.Property(p => p.OldPrice).HasColumnType("decimal(18,2)");
-           
         }
     }
 }

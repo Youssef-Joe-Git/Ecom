@@ -20,6 +20,6 @@ namespace Ecom.Infrastructure.Data
         }
         public virtual DbSet<Category> Categories { get; set; }
         public virtual DbSet<Product> Products { get; set; }
-        public virtual DbSet<Photo> Photos { get; set; }
+        public virtual DbSet<Image> Images { get; set; }
     }
 }

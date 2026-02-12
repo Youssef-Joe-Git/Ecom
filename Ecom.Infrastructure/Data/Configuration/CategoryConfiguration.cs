@@ -15,11 +15,11 @@ namespace Ecom.Infrastructure.Data.Config
         {
             builder.HasKey(c => c.Id);
             builder.Property(c => c.Name).IsRequired().HasMaxLength(100);
-            //builder.HasData(
-            //    new Category { Id = 1, Name = "Electronics", Description = "Electronic gadgets and devices" },
-            //    new Category { Id = 2, Name = "Books", Description = "Various kinds of books" },
-            //    new Category { Id = 3, Name = "Clothing", Description = "Apparel and garments" }
-            //);
+            builder.HasData(
+                new Category { Id = 1, Name = "Electronics", Description = "Electronic gadgets and devices" },
+                new Category { Id = 2, Name = "Books", Description = "Various kinds of books" },
+                new Category { Id = 3, Name = "Clothing", Description = "Apparel and garments" }
+            );
         }
     }
 }

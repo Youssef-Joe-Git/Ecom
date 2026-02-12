@@ -2,7 +2,7 @@
 
 namespace Ecom.Core.Interfaces
 {
-    public interface IPhotoRepository: IGenericRpository<Photo>
+    public interface IImageRepository: IGenericRpository<Image>
     {
     }
 }

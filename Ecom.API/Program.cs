@@ -1,32 +1,56 @@
+﻿using System.Diagnostics;
+using Ecom.API.Middleware;
 using Ecom.Infrastructure;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.OpenApi.Models;
 
-public class Program
+internal class Program
 {
     private static void Main(string[] args)
     {
         var builder = WebApplication.CreateBuilder(args);
+        // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
+        builder.Services.AddEndpointsApiExplorer();
+        builder.Services.AddSwaggerGen();
+        builder.Services.AddMemoryCache();
 
-        // Add services to the container.
 
+        // Add services
         builder.Services.AddControllers();
-        // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
-        builder.Services.AddOpenApi();
+        builder.Services.AddEndpointsApiExplorer();
         builder.Services.AddInfrastructureServices(builder.Configuration);
-
+        builder.Services.AddAutoMapper(cfg =>
+        {
+            // هنا ممكن تضيف Config إضافي لو حبيت
+        }, AppDomain.CurrentDomain.GetAssemblies());
         var app = builder.Build();
 
-        // Configure the HTTP request pipeline.
+        // Middleware
         if (app.Environment.IsDevelopment())
         {
-            app.MapOpenApi();
+            app.UseSwagger();
+            app.UseSwaggerUI();
+            // افتح المتصفح تلقائي بعد تشغيل التطبيق
+            var url = "https://localhost:7001/swagger";
+            try
+            {
+                Process.Start(new ProcessStartInfo { FileName = url, UseShellExecute = true });
+            }
+            catch
+            {
+                // لو أي مشكلة، ممكن تتجاهلها
+            }
         }
+        app.UseMiddleware<ExceptionsMiddleware>();
+        app.UseStatusCodePagesWithReExecute("/errors/{0}");
 
         app.UseHttpsRedirection();
-
         app.UseAuthorization();
-
         app.MapControllers();
 
+            
+
         app.Run();
+        
     }
 }

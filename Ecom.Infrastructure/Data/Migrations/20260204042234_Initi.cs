@@ -2,10 +2,12 @@
 
 #nullable disable
 
+#pragma warning disable CA1814 // Prefer jagged arrays over multidimensional
+
 namespace Ecom.Infrastructure.Data.Migrations
 {
     /// <inheritdoc />
-    public partial class Init : Migration
+    public partial class Initi : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -32,7 +34,8 @@ namespace Ecom.Infrastructure.Data.Migrations
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Name = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
                     Description = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Price = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
+                    NewPrice = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
+                    OldPrice = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
                     CategoryId = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
@@ -47,7 +50,7 @@ namespace Ecom.Infrastructure.Data.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Photos",
+                name: "Images",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
@@ -57,18 +60,38 @@ namespace Ecom.Infrastructure.Data.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Photos", x => x.Id);
+                    table.PrimaryKey("PK_Images", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Photos_Products_ProductId",
+                        name: "FK_Images_Products_ProductId",
                         column: x => x.ProductId,
                         principalTable: "Products",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
 
+            migrationBuilder.InsertData(
+                table: "Categories",
+                columns: new[] { "Id", "Description", "Name" },
+                values: new object[,]
+                {
+                    { 1, "Electronic gadgets and devices", "Electronics" },
+                    { 2, "Various kinds of books", "Books" },
+                    { 3, "Apparel and garments", "Clothing" }
+                });
+
+            migrationBuilder.InsertData(
+                table: "Products",
+                columns: new[] { "Id", "CategoryId", "Description", "Name", "NewPrice", "OldPrice" },
+                values: new object[,]
+                {
+                    { 1, 1, "Description for Product 1", "Product 1", 19.99m, 29.99m },
+                    { 2, 2, "Description for Product 2", "Product 2", 39.99m, 49.99m },
+                    { 3, 3, "Description for Product 3", "Product 3", 59.99m, 69.99m }
+                });
+
             migrationBuilder.CreateIndex(
-                name: "IX_Photos_ProductId",
-                table: "Photos",
+                name: "IX_Images_ProductId",
+                table: "Images",
                 column: "ProductId");
 
             migrationBuilder.CreateIndex(
@@ -81,7 +104,7 @@ namespace Ecom.Infrastructure.Data.Migrations
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
-                name: "Photos");
+                name: "Images");
 
             migrationBuilder.DropTable(
                 name: "Products");

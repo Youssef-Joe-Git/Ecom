@@ -15,7 +15,7 @@ internal class Program
         builder.Services.AddMemoryCache();
 
         builder.Services.AddCors(op=>op.AddPolicy("CORSPolicy",
-            b=>b.AllowAnyHeader().AllowAnyMethod().AllowCredentials().WithOrigins("https://localhost:4200")));
+            b=>b.AllowAnyHeader().AllowAnyMethod().AllowCredentials().WithOrigins("http://localhost:4200")));
 
 
         // Add services
